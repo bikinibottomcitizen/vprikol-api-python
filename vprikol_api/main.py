@@ -107,6 +107,6 @@ class VprikolAPI:
         result = await get(url=f'{self.base_url}rpnick', headers=self.headers,
                            params={'gender': gender, 'nation': nation})
         if not result.success:
-            raise Exception(result)
+            raise Exception(result.error)
 
         return GenerateRPUsernameAPIResponse(**result.data)

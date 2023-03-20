@@ -33,7 +33,7 @@ class MembersAPIPlayer(BaseModel):
     is_online: bool = Field(alias='isOnline')
     is_leader: bool = Field(alias='isLeader')
     rank: int
-    rank_label: str = Field(alias='rankLabel')
+    rank_label: str | None = Field(alias='rankLabel')
 
 
 class MembersAPIResponse(BaseModel):

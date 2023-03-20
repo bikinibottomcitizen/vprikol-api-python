@@ -2,7 +2,7 @@
 name = "vprikol-api-python"
 version = "0.1.0"
 description = ""
-authors = ["'Alex' <'alexank1111@gmail.com'>"]
+authors = ["'Alex' <alexank1111@gmail.com>"]
 readme = "README.md"
 packages = [{include = "vprikol_api"}]
 

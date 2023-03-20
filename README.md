@@ -1,1 +1,1 @@
-123
+pip install vprikol-api-python

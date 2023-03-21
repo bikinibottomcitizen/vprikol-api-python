@@ -1,6 +1,6 @@
 from .model import IpAPIResponse, MembersAPIResponse, PlayerInfoRodinaAPIResponse, PlayerInfoArizonaAPIResponse, \
     CreatedFindTaskAPIResponse, \
-    ServerStatusAPIResponse, RatingAPIResponse, CheckRPUsernameAPIResponse, GenerateRPUsernameAPIResponse
+    ServerStatusAPIResponse, RatingAPIResponse, CheckRPUsernameAPIResponse, GenerateRPUsernameAPIResponse, Response
 
 from .api import get, post
 
@@ -17,17 +17,17 @@ class VprikolAPI:
         self.headers = {'Authorization': f'Bearer {token}'}
         self.base_url = base_url
 
-    async def get_ip_info(self, ip: str) -> IpAPIResponse:
+    async def get_ip_info(self, ip: str) -> Response:
         result = await get(url=f'{self.base_url}ip', headers=self.headers, params={'ip': ip})
 
         if not result.success:
             return result
 
-        return IpAPIResponse(**result.data)
+        return Response(data=IpAPIResponse(**result.data), success=result.success, error=result.error)
 
-    async def get_members(self, server_id: int, fraction_id: int) -> MembersAPIResponse:
+    async def get_members(self, server_id: int, fraction_id: int) -> Response:
         result = await get(url=f'{self.base_url}members', headers=self.headers, params={'server': server_id,
-                                                                                          'fraction_id': fraction_id})
+                                                                                        'fraction_id': fraction_id})
         if not result.success:
             return result
 
@@ -39,10 +39,9 @@ class VprikolAPI:
                             'rank': result.data['players'][player]['rank'],
                             'rankLabel': result.data['players'][player]['rankLabel']})
         result.data['players'] = players
-        return MembersAPIResponse(**result.data)
+        return Response(data=MembersAPIResponse(**result.data), success=result.success, error=result.error)
 
-    async def get_player_information(self, server_id: int, nickname: str) -> PlayerInfoRodinaAPIResponse \
-                                                                             | PlayerInfoArizonaAPIResponse:
+    async def get_player_information(self, server_id: int, nickname: str) -> Response:
         task = await post(url=f'{self.base_url}find/createTask', headers=self.headers,
                           params={'server': server_id, 'nick': nickname})
         if not task.success:
@@ -57,16 +56,15 @@ class VprikolAPI:
             if not result.success and result.error.error_code and result.error.error_code == 425:
                 continue
 
-            if result.error and result.error.error_code == 422 :
+            if result.error and result.error.error_code == 422:
                 return result
 
             try:
-                return PlayerInfoArizonaAPIResponse(**result.data)
+                return Response(data=PlayerInfoArizonaAPIResponse(**result.data), success=result.success, error=result.error)
             except ValidationError:
-                return PlayerInfoRodinaAPIResponse(**result.data)
+                return Response(data=PlayerInfoRodinaAPIResponse(**result.data), success=result.success, error=result.error)
 
-    async def get_server_status(self, server_id: int | None = None) -> ServerStatusAPIResponse | \
-                                                                       list[ServerStatusAPIResponse]:
+    async def get_server_status(self, server_id: int | None = None) -> Response:
         if server_id:
             params = {'server': server_id}
         else:
@@ -76,13 +74,14 @@ class VprikolAPI:
                            params=params)
 
         if not result.success:
-            return result
+            return Response(data=ServerStatusAPIResponse(**result.data), success=result.success, error=result.error)
 
         if isinstance(result.data, list):
-            return parse_obj_as(list[ServerStatusAPIResponse], result.data)
+            data = parse_obj_as(list[ServerStatusAPIResponse], result.data)
+            return Response(data=data, success=result.success, error=result.error)
 
     async def get_rating(self, server_id: int, first_type: Literal[1, 2, 3],
-                         second_type: Literal[1, 2, 3] | None = None) -> RatingAPIResponse:
+                         second_type: Literal[1, 2, 3] | None = None) -> Response:
         if second_type:
             params = {'type': first_type, 'subtype': second_type, 'server': server_id}
         else:
@@ -94,23 +93,23 @@ class VprikolAPI:
         if not result.success:
             return result
 
-        return RatingAPIResponse(**result.data)
+        return Response(data=RatingAPIResponse(**result.data), success=result.success, error=result.error)
 
-    async def check_rp_nickname(self, nickname: str) -> CheckRPUsernameAPIResponse:
+    async def check_rp_nickname(self, nickname: str) -> Response:
         result = await get(url=f'{self.base_url}checkrp', headers=self.headers,
                            params={'nick': nickname})
 
         if not result.success:
             return result
 
-        return CheckRPUsernameAPIResponse(**result.data)
+        return Response(data=CheckRPUsernameAPIResponse(**result.data), success=result.success, error=result.error)
 
     async def generate_rp_nickname(self, gender: Literal['male', 'female'], nation: Literal[
         'russian', 'american', 'german', 'french', 'italian', 'japanese', 'latinos', 'swedish', 'danish', 'romanian']) \
-            -> GenerateRPUsernameAPIResponse:
+            -> Response:
         result = await get(url=f'{self.base_url}rpnick', headers=self.headers,
                            params={'gender': gender, 'nation': nation})
         if not result.success:
             return result
 
-        return GenerateRPUsernameAPIResponse(**result.data)
+        return Response(data=GenerateRPUsernameAPIResponse(**result.data), success=result.success, error=result.error)

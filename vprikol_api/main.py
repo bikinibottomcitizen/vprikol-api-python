@@ -53,8 +53,12 @@ class VprikolAPI:
             await asyncio.sleep(1)
             result = await get(url=f'{self.base_url}find/getTaskResult', headers=self.headers,
                                params={'request_id': task.request_id})
+
             if not result.success and result.error.error_code and result.error.error_code == 425:
                 continue
+
+            if result.error.error_code == 422:
+                return result.error
 
             try:
                 return PlayerInfoArizonaAPIResponse(**result.data)

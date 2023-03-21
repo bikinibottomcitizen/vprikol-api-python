@@ -21,7 +21,7 @@ class VprikolAPI:
         result = await get(url=f'{self.base_url}ip', headers=self.headers, params={'ip': ip})
 
         if not result.success:
-            raise Exception(result.error)
+            return result
 
         return IpAPIResponse(**result.data)
 
@@ -29,7 +29,7 @@ class VprikolAPI:
         result = await get(url=f'{self.base_url}members', headers=self.headers, params={'server': server_id,
                                                                                           'fraction_id': fraction_id})
         if not result.success:
-            raise Exception(result.error)
+            return result
 
         players = []
         for player in result.data['players']:
@@ -46,7 +46,7 @@ class VprikolAPI:
         task = await post(url=f'{self.base_url}find/createTask', headers=self.headers,
                           params={'server': server_id, 'nick': nickname})
         if not task.success:
-            raise Exception(task.error)
+            return task
 
         task = CreatedFindTaskAPIResponse(**task.data)
         while True:
@@ -58,7 +58,7 @@ class VprikolAPI:
                 continue
 
             if result.error.error_code == 422:
-                return result.error
+                return result
 
             try:
                 return PlayerInfoArizonaAPIResponse(**result.data)
@@ -76,7 +76,7 @@ class VprikolAPI:
                            params=params)
 
         if not result.success:
-            raise Exception(result.error)
+            return result
 
         if isinstance(result.data, list):
             return parse_obj_as(list[ServerStatusAPIResponse], result.data)
@@ -92,7 +92,7 @@ class VprikolAPI:
                            params=params)
 
         if not result.success:
-            raise Exception(result.error)
+            return result
 
         return RatingAPIResponse(**result.data)
 
@@ -101,7 +101,7 @@ class VprikolAPI:
                            params={'nick': nickname})
 
         if not result.success:
-            raise Exception(result.error)
+            return result
 
         return CheckRPUsernameAPIResponse(**result.data)
 
@@ -111,6 +111,6 @@ class VprikolAPI:
         result = await get(url=f'{self.base_url}rpnick', headers=self.headers,
                            params={'gender': gender, 'nation': nation})
         if not result.success:
-            raise Exception(result.error)
+            return result
 
         return GenerateRPUsernameAPIResponse(**result.data)

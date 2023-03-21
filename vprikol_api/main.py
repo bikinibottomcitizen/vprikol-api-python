@@ -57,7 +57,7 @@ class VprikolAPI:
             if not result.success and result.error.error_code and result.error.error_code == 425:
                 continue
 
-            if result.error.error_code == 422:
+            if result.error and result.error.error_code == 422 :
                 return result
 
             try:

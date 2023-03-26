@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "vprikol-api-python"
-version = "1.2.2"
+version = "1.2.3"
 description = ""
 authors = ["Alex <alexank1111@gmail.com>"]
 readme = "README.md"
@@ -8,7 +8,7 @@ packages = [{include = "vprikol_api"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"
-pydantic = "^1.10.6"
+pydantic = "^1.10.7"
 aiohttp = "^3.8.4"
 
 

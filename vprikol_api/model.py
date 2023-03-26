@@ -88,6 +88,10 @@ class PlayerInfoArizonaAPIResponse(BaseModel):
     server_name: str = Field(alias='serverName')
 
 
+class PlayerInfoNotFound(APIErrorResponse):
+    pass
+
+
 class PlayerInfoRodinaAPIResponse(BaseModel):
     hp: int
     hunger: int
@@ -144,4 +148,3 @@ class CheckRPUsernameAPIResponse(BaseModel):
 class GenerateRPUsernameAPIResponse(BaseModel):
     name: str
     surname: str
-

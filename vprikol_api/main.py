@@ -1,6 +1,7 @@
 from .model import IpAPIResponse, MembersAPIResponse, PlayerInfoRodinaAPIResponse, PlayerInfoArizonaAPIResponse, \
     CreatedFindTaskAPIResponse, \
-    ServerStatusAPIResponse, RatingAPIResponse, CheckRPUsernameAPIResponse, GenerateRPUsernameAPIResponse, PlayerInfoNotFound
+    ServerStatusAPIResponse, RatingAPIResponse, CheckRPUsernameAPIResponse, GenerateRPUsernameAPIResponse, \
+    PlayerInfoNotFound
 
 from .api import get, post
 
@@ -41,12 +42,12 @@ class VprikolAPI:
         result.data['players'] = players
         return MembersAPIResponse(**result.data)
 
-    async def get_player_information(self, server_id: int, nickname: str) -> PlayerInfoRodinaAPIResponse \
-                                                                             | PlayerInfoArizonaAPIResponse | None:
+    async def get_player_information(self, server_id: int, nickname: str) -> PlayerInfoRodinaAPIResponse\
+                                                                             | PlayerInfoArizonaAPIResponse:
         task = await post(url=f'{self.base_url}find/createTask', headers=self.headers,
                           params={'server': server_id, 'nick': nickname})
         if not task.success:
-            return task
+            raise Exception(task.error)
 
         task = CreatedFindTaskAPIResponse(**task.data)
         while True:

@@ -43,7 +43,8 @@ class VprikolAPI:
         return MembersAPIResponse(**result.data)
 
     async def get_player_information(self, server_id: int, nickname: str) -> PlayerInfoRodinaAPIResponse\
-                                                                             | PlayerInfoArizonaAPIResponse:
+                                                                             | PlayerInfoArizonaAPIResponse\
+                                                                             | PlayerInfoNotFound:
         task = await post(url=f'{self.base_url}find/createTask', headers=self.headers,
                           params={'server': server_id, 'nick': nickname})
         if not task.success:

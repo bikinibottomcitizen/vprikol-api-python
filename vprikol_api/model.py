@@ -37,13 +37,13 @@ class MembersAPIPlayer(BaseModel):
 
 
 class MembersAPIResponse(BaseModel):
-    server: str
     fraction_label: str = Field(alias='fractionLabel')
     players: list[MembersAPIPlayer]
     total_players: int = Field(alias='totalPlayers')
     total_online: int = Field(alias='totalOnline')
     leader_nickname: str | None = Field(alias='leaderNick')
     is_leader_online: bool = Field(alias='isLeaderOnline')
+
 
 
 class ServerStatusAPIResponse(BaseModel):

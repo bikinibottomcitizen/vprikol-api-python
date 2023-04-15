@@ -26,24 +26,29 @@ class VprikolAPI:
 
         return IpAPIResponse(**result.data)
 
-    async def get_members(self, server_id: int, fraction_id: int) -> MembersAPIResponse:
-        result = await get(url=f'{self.base_url}members', headers=self.headers, params={'server': server_id,
+    async def get_members(self, server_id: int, fraction_id: int | list[int]) -> dict[str, MembersAPIResponse]:
+        result = await get(url=f'{self.base_url}members', headers=self.headers, params={'server_id': server_id,
                                                                                         'fraction_id': fraction_id})
         if not result.success:
             raise Exception(result.error)
+        response = {}
+        for fraction_id in result.data:
+            players = []
+            if not fraction_id.isdigit():
+                continue
+            for player in result.data[fraction_id]['players']:
+                players.append({'username': player, 'id': result.data[fraction_id]['players'][player]['id'],
+                                'isOnline': result.data[fraction_id]['players'][player]['isOnline'],
+                                'isLeader': result.data[fraction_id]['players'][player]['isLeader'],
+                                'rank': result.data[fraction_id]['players'][player]['rank'],
+                                'rankLabel': result.data[fraction_id]['players'][player]['rankLabel']})
+            result.data[fraction_id]['players'] = players
+            response[fraction_id] = MembersAPIResponse(**result.data[fraction_id])
 
-        players = []
-        for player in result.data['players']:
-            players.append({'username': player, 'id': result.data['players'][player]['id'],
-                            'isOnline': result.data['players'][player]['isOnline'],
-                            'isLeader': result.data['players'][player]['isLeader'],
-                            'rank': result.data['players'][player]['rank'],
-                            'rankLabel': result.data['players'][player]['rankLabel']})
-        result.data['players'] = players
-        return MembersAPIResponse(**result.data)
+        return response
 
-    async def get_player_information(self, server_id: int, nickname: str) -> PlayerInfoRodinaAPIResponse\
-                                                                             | PlayerInfoArizonaAPIResponse\
+    async def get_player_information(self, server_id: int, nickname: str) -> PlayerInfoRodinaAPIResponse \
+                                                                             | PlayerInfoArizonaAPIResponse \
                                                                              | PlayerInfoNotFound:
         task = await post(url=f'{self.base_url}find/createTask', headers=self.headers,
                           params={'server': server_id, 'nick': nickname})

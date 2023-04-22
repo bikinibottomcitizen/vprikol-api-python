@@ -18,7 +18,7 @@ class FastApiErrorResponse(BaseModel):
 
 class APIErrorResponse(BaseModel):
     error_code: int
-    message: str
+    detail: str
 
 
 class Response(GenericModel):

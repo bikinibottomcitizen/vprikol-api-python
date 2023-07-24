@@ -4,10 +4,8 @@ from .model import IpAPIResponse, MembersAPIResponse, PlayerInfoRodinaAPIRespons
     PlayerInfoNotFound
 
 from .api import get, post
-
 from typing import Literal
 import asyncio
-
 from pydantic import parse_obj_as, ValidationError
 
 
@@ -41,7 +39,11 @@ class VprikolAPI:
                                 'isOnline': result.data[fraction_id]['players'][player]['isOnline'],
                                 'isLeader': result.data[fraction_id]['players'][player]['isLeader'],
                                 'rank': result.data[fraction_id]['players'][player]['rank'],
-                                'rankLabel': result.data[fraction_id]['players'][player]['rankLabel']})
+                                'rankLabel': result.data[fraction_id]['players'][player]['rankLabel'],
+                                'ingameId': result.data[fraction_id]['players'][player]['ingameId'],
+                                'lvl': result.data[fraction_id]['players'][player]['lvl'],
+                                'ping': result.data[fraction_id]['players'][player]['ping'],
+                                'color': result.data[fraction_id]['players'][player]['color']})
             result.data[fraction_id]['players'] = players
             response[fraction_id] = MembersAPIResponse(**result.data[fraction_id])
 
@@ -57,11 +59,11 @@ class VprikolAPI:
 
         task = CreatedFindTaskAPIResponse(**task.data)
         while True:
-            await asyncio.sleep(1)
             result = await get(url=f'{self.base_url}find/getTaskResult', headers=self.headers,
                                params={'request_id': task.request_id})
 
             if not result.success and result.error.error_code and result.error.error_code == 425:
+                await asyncio.sleep(1)
                 continue
 
             if result.error and result.error.error_code == 422:

@@ -17,8 +17,9 @@ class FastApiErrorResponse(BaseModel):
 
 
 class APIErrorResponse(BaseModel):
-    error_code: int
+    status_code: int
     detail: str
+    request_queue: int | None = None
 
 
 class Response(GenericModel):
@@ -34,31 +35,43 @@ class MembersAPIPlayer(BaseModel):
     is_leader: bool = Field(alias='isLeader')
     rank: int
     rank_label: str | None = Field(alias='rankLabel')
+    ingame_id: int = Field(alias='ingameId')
+    ping: int
+    lvl: int
+    color: int
+
+
+class MembersAPIRecord(BaseModel):
+    count: int
+    date: str
+    leader: str
 
 
 class MembersAPIResponse(BaseModel):
+    server_label: str = Field(alias='serverName')
     fraction_label: str = Field(alias='fractionLabel')
     players: list[MembersAPIPlayer]
+    record: MembersAPIRecord
     total_players: int = Field(alias='totalPlayers')
     total_online: int = Field(alias='totalOnline')
     leader_nickname: str | None = Field(alias='leaderNick')
     is_leader_online: bool = Field(alias='isLeaderOnline')
 
 
-
 class ServerStatusAPIResponse(BaseModel):
-    hostname: str
-    payday_multiplier: int = Field(alias='paydayMultiplier')
+    server_number: int = Field(alias='number')
+    ip: str
+    port: int
     online_players: int = Field(alias='onlinePlayers')
     max_players: int = Field(alias='maxPlayers')
     is_closed: bool = Field(alias='isClosed')
-    ip: str
     server_label: str = Field(alias='serverLabel')
 
 
 class CreatedFindTaskAPIResponse(BaseModel):
     request_id: str
     request_time: int
+    request_queue: int
 
 
 class PlayerInfoArizonaAPIResponse(BaseModel):
@@ -82,7 +95,6 @@ class PlayerInfoArizonaAPIResponse(BaseModel):
     vip_label: str = Field(alias='vipLabel')
     phone_number: int | None = Field(alias='phoneNumber')
     updated_at: int = Field(alias='updatedAt')
-    is_new_request: bool = Field(alias='newRequest')
     player_nick: str = Field(alias='playerNick')
     player_server: int = Field(alias='playerServer')
     server_name: str = Field(alias='serverName')

@@ -19,7 +19,7 @@ class FastApiErrorResponse(BaseModel):
 class APIErrorResponse(BaseModel):
     status_code: int
     detail: str
-    request_queue: int | None = None
+    queue_position: int | None = None
 
 
 class Response(GenericModel):
@@ -71,7 +71,7 @@ class ServerStatusAPIResponse(BaseModel):
 class CreatedFindTaskAPIResponse(BaseModel):
     request_id: str
     request_time: int
-    request_queue: int
+    queue_position: int
 
 
 class PlayerInfoArizonaAPIResponse(BaseModel):

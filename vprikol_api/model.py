@@ -1,4 +1,4 @@
-from typing import Union, Literal, Generic, TypeVar
+from typing import TypeVar
 
 from pydantic import BaseModel, Field
 from pydantic.generics import GenericModel
@@ -17,7 +17,7 @@ class FastApiErrorResponse(BaseModel):
 
 
 class APIErrorResponse(BaseModel):
-    status_code: int
+    error_code: int
     detail: str
     queue_position: int | None = None
 

@@ -66,7 +66,7 @@ class VprikolAPI:
                 await asyncio.sleep(1)
                 continue
 
-            if result.error and result.error.error_code == 422:
+            if result.error and result.error.status_code == 422:
                 return PlayerInfoNotFound(**result.error.dict())
 
             try:
@@ -74,7 +74,7 @@ class VprikolAPI:
             except ValidationError:
                 return PlayerInfoArizonaAPIResponse(**result.data)
 
-    async def get_server_status(self, server_id: int | None = None) -> ServerStatusAPIResponse:
+    async def get_server_status(self, server_id: int | None = None) -> list[ServerStatusAPIResponse]:
         if server_id:
             params = {'server': server_id}
         else:

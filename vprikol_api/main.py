@@ -10,7 +10,7 @@ from pydantic import parse_obj_as, ValidationError
 
 
 class VprikolAPI:
-    def __init__(self, token: str, base_url: str = 'https://api.vprikol.dev/'):
+    def __init__(self, token: str, base_url: str = 'https://api.vprikol.ru/'):
         if len(token) < 1:
             raise Exception('Токен передан неправильно.')
         self.headers = {'Authorization': f'Bearer {token}'}
@@ -66,7 +66,7 @@ class VprikolAPI:
                 await asyncio.sleep(1)
                 continue
 
-            if result.error and result.error.status_code == 422:
+            if result.error and result.error.error_code == 422:
                 return PlayerInfoNotFound(**result.error.dict())
 
             try:

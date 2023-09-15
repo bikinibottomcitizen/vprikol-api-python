@@ -74,7 +74,7 @@ class VprikolAPI:
             except ValidationError:
                 return PlayerInfoArizonaAPIResponse(**result.data)
 
-    async def get_server_status(self, server_id: int | None = None) -> list[ServerStatusAPIResponse]:
+    async def get_server_status(self, server_id: int | None = None) -> list[ServerStatusAPIResponse] | ServerStatusAPIResponse:
         if server_id:
             params = {'server': server_id}
         else:
@@ -88,6 +88,7 @@ class VprikolAPI:
 
         if isinstance(result.data, list):
             return parse_obj_as(list[ServerStatusAPIResponse], result.data)
+        return ServerStatusAPIResponse(**result.data)
 
     async def get_rating(self, server_id: int, first_type: Literal[1, 2, 3],
                          second_type: Literal[1, 2, 3] | None = None) -> RatingAPIResponse:

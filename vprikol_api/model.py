@@ -35,10 +35,10 @@ class MembersAPIPlayer(BaseModel):
     is_leader: bool = Field(alias='isLeader')
     rank: int
     rank_label: str | None = Field(alias='rankLabel')
-    ingame_id: int = Field(alias='ingameId')
-    ping: int
-    lvl: int
-    color: int
+    ingame_id: int | None = Field(alias='ingameId')
+    ping: int | None
+    lvl: int | None
+    color: int | None
 
 
 class MembersAPIRecord(BaseModel):

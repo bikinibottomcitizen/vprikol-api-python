@@ -56,6 +56,7 @@ class MembersAPIResponse(BaseModel):
     total_online: int = Field(alias='totalOnline')
     leader_nickname: str | None = Field(alias='leaderNick')
     is_leader_online: bool = Field(alias='isLeaderOnline')
+    online_updated_at: int = Field(alias='updated_at_online')
 
 
 class ServerStatusAPIResponse(BaseModel):
@@ -74,25 +75,25 @@ class CreatedFindTaskAPIResponse(BaseModel):
     queue_position: int
 
 
-class PlayerInfoArizonaAPIResponse(BaseModel):
-    account_id: int = Field(alias='accountId')
+class PlayerInfoAPIResponse(BaseModel):
+    account_id: int | None = Field(alias='accountId')
     player_id: int | None = Field(alias='playerId')
-    lvl: int
-    cash: int
-    bank: int
+    lvl: int | None
+    cash: int | None
+    bank: int | None
     individual_account: int | None = Field(alias='individualAccount')
-    deposit: int
-    total_money: int = Field(alias='totalMoney')
+    deposit: int | None
+    total_money: int | None = Field(alias='totalMoney')
     is_online: bool = Field(alias='isOnline')
-    job_label: str = Field(alias='jobLabel')
-    job_id: int = Field(alias='jobId')
+    job_label: str | None = Field(alias='jobLabel')
+    job_id: int | None = Field(alias='jobId')
     rank_number: int | None = Field(alias='rankNumber')
     rank_label: str | None = Field(alias='rankLabel')
     is_leader: bool = Field(alias='isLeader')
     org_label: str = Field(alias='orgLabel')
     org_id: int = Field(alias='orgId')
-    vip_lvl: int = Field(alias='vipLvl')
-    vip_label: str = Field(alias='vipLabel')
+    vip_lvl: int | None = Field(alias='vipLvl')
+    vip_label: str | None = Field(alias='vipLabel')
     phone_number: int | None = Field(alias='phoneNumber')
     updated_at: int = Field(alias='updatedAt')
     player_nick: str = Field(alias='playerNick')
@@ -104,38 +105,15 @@ class PlayerInfoNotFound(APIErrorResponse):
     pass
 
 
-class PlayerInfoRodinaAPIResponse(BaseModel):
-    hp: int
-    hunger: int
-    lvl: int
-    vip: str
-    cash: int
-    bank: int
-    azCoins: int
-    isLeader: bool
-    fraction: str
-    rank: int
-    job: str
-    isOnline: bool
-
-
-class RatingPlayerAPI(BaseModel):
+class RatingPlayerInfo(BaseModel):
     number: int
     name: str
     is_online: bool = Field('isOnline')
 
 
-class RatingFamilyAPI(BaseModel):
-    number: int
-    name: str
-    owner: str
-    lvl: int
-
-
 class RatingAPIResponse(BaseModel):
     server: str
-    players: list[RatingPlayerAPI] | None
-    families: list[RatingFamilyAPI] | None
+    players: list[RatingPlayerInfo]
 
 
 class IpAPIResponse(BaseModel):
@@ -148,7 +126,8 @@ class IpAPIResponse(BaseModel):
 
 class CheckRPUsernameName(BaseModel):
     rp: bool
-    schedule: str | None
+    graph: str | None
+    gpt_answer: str | None
 
 
 class CheckRPUsernameAPIResponse(BaseModel):

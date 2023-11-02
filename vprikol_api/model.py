@@ -56,7 +56,8 @@ class MembersAPIResponse(BaseModel):
     total_online: int = Field(alias='totalOnline')
     leader_nickname: str | None = Field(alias='leaderNick')
     is_leader_online: bool = Field(alias='isLeaderOnline')
-    online_updated_at: int = Field(alias='updated_at_online')
+    online_updated_at: int = Field(alias='onlineUpdatedAt')
+    members_updated_at: int = Field(alias='membersUpdatedAt')
 
 
 class ServerStatusAPIResponse(BaseModel):

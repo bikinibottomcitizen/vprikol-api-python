@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "vprikol-api-python"
-version = "1.8.5"
+version = "1.9.0"
 description = ""
 authors = ["Alex <alexank1111@gmail.com>"]
 readme = "README.md"

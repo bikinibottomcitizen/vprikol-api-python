@@ -1,6 +1,8 @@
+import time
+
 from .model import IpAPIResponse, MembersAPIResponse, PlayerInfoAPIResponse, CreatedFindTaskAPIResponse, \
     ServerStatusAPIResponse, RatingAPIResponse, CheckRPUsernameAPIResponse, GenerateRPUsernameAPIResponse, \
-    PlayerInfoNotFound
+    PlayerInfoNotFound, PlayerOnlineAPIResponse
 
 from .api import get, post
 from typing import Literal
@@ -85,6 +87,7 @@ class VprikolAPI:
 
         if isinstance(result.data, list):
             return parse_obj_as(list[ServerStatusAPIResponse], result.data)
+
         return ServerStatusAPIResponse(**result.data)
 
     async def get_rating(self, server_id: int, rating_type: Literal[1, 2, 3]) -> RatingAPIResponse:
@@ -115,3 +118,14 @@ class VprikolAPI:
             raise Exception(result.error)
 
         return GenerateRPUsernameAPIResponse(**result.data)
+
+    async def get_player_online(self, nickname: str, server_id: int, count: int = 100,
+                                offset: int = 0, date: int = int(time.time())) -> PlayerOnlineAPIResponse:
+        result = await get(url=f'{self.base_url}online', headers=self.headers,
+                           params={'nickname': nickname, 'count': count, 'offset': offset, 'server_id': server_id,
+                                   'filter_by_date': date})
+
+        if not result.success:
+            raise Exception(result.error)
+
+        return PlayerOnlineAPIResponse(**result.data)

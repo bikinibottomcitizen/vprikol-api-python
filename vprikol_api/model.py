@@ -140,3 +140,12 @@ class CheckRPUsernameAPIResponse(BaseModel):
 class GenerateRPUsernameAPIResponse(BaseModel):
     name: str
     surname: str
+
+
+class OnlinePlayerInfo(BaseModel):
+    login_at: int
+    logout_at: int
+
+
+class PlayerOnlineAPIResponse(BaseModel):
+    sessions: list[OnlinePlayerInfo]

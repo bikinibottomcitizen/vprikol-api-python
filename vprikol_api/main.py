@@ -2,9 +2,9 @@ import time
 
 from .model import IpAPIResponse, MembersAPIResponse, PlayerInfoAPIResponse, CreatedFindTaskAPIResponse, \
     ServerStatusAPIResponse, RatingAPIResponse, CheckRPUsernameAPIResponse, GenerateRPUsernameAPIResponse, \
-    PlayerInfoNotFound, PlayerOnlineAPIResponse
+    PlayerInfoNotFound, PlayerOnlineAPIResponse, GhettoZonesAPIResponse
 
-from .api import get, post
+from .api import get_json, post_json, get_bytes
 from typing import Literal
 import asyncio
 from pydantic import parse_obj_as, ValidationError
@@ -18,7 +18,7 @@ class VprikolAPI:
         self.base_url = base_url
 
     async def get_ip_info(self, ip: str) -> IpAPIResponse:
-        result = await get(url=f'{self.base_url}ip', headers=self.headers, params={'ip': ip})
+        result = await get_json(url=f'{self.base_url}ip', headers=self.headers, params={'ip': ip})
 
         if not result.success:
             raise Exception(result.error)
@@ -26,8 +26,8 @@ class VprikolAPI:
         return IpAPIResponse(**result.data)
 
     async def get_members(self, server_id: int, fraction_id: int | list[int]) -> dict[str, MembersAPIResponse]:
-        result = await get(url=f'{self.base_url}members', headers=self.headers, params={'server_id': server_id,
-                                                                                        'fraction_id': fraction_id})
+        result = await get_json(url=f'{self.base_url}members', headers=self.headers, params={'server_id': server_id,
+                                                                                             'fraction_id': fraction_id})
         if not result.success:
             raise Exception(result.error)
         response = {}
@@ -51,15 +51,15 @@ class VprikolAPI:
         return response
 
     async def get_player_information(self, server_id: int, nickname: str) -> PlayerInfoAPIResponse | PlayerInfoNotFound:
-        task = await post(url=f'{self.base_url}find/createTask', headers=self.headers,
-                          params={'server': server_id, 'nick': nickname})
+        task = await post_json(url=f'{self.base_url}find/createTask', headers=self.headers,
+                               params={'server': server_id, 'nick': nickname})
         if not task.success:
             raise Exception(task.error)
 
         task = CreatedFindTaskAPIResponse(**task.data)
         while True:
-            result = await get(url=f'{self.base_url}find/getTaskResult', headers=self.headers,
-                               params={'request_id': task.request_id})
+            result = await get_json(url=f'{self.base_url}find/getTaskResult', headers=self.headers,
+                                    params={'request_id': task.request_id})
 
             if not result.success and result.error.error_code and result.error.error_code == 425:
                 await asyncio.sleep(0.5)
@@ -73,14 +73,15 @@ class VprikolAPI:
             except ValidationError:
                 return PlayerInfoAPIResponse(**result.data)
 
-    async def get_server_status(self, server_id: int | None = None) -> list[ServerStatusAPIResponse] | ServerStatusAPIResponse:
+    async def get_server_status(self, server_id: int | None = None) -> list[
+                                                                           ServerStatusAPIResponse] | ServerStatusAPIResponse:
         if server_id:
             params = {'server': server_id}
         else:
             params = None
 
-        result = await get(url=f'{self.base_url}status', headers=self.headers,
-                           params=params)
+        result = await get_json(url=f'{self.base_url}status', headers=self.headers,
+                                params=params)
 
         if not result.success:
             raise Exception(result.error)
@@ -93,8 +94,8 @@ class VprikolAPI:
     async def get_rating(self, server_id: int, rating_type: Literal[1, 2, 3]) -> RatingAPIResponse:
         params = {'type': rating_type, 'server': server_id}
 
-        result = await get(url=f'{self.base_url}rating', headers=self.headers,
-                           params=params)
+        result = await get_json(url=f'{self.base_url}rating', headers=self.headers,
+                                params=params)
 
         if not result.success:
             raise Exception(result.error)
@@ -102,8 +103,8 @@ class VprikolAPI:
         return RatingAPIResponse(**result.data)
 
     async def check_rp_nickname(self, nickname: str, ai: bool = False) -> CheckRPUsernameAPIResponse:
-        result = await get(url=f'{self.base_url}checkrp', headers=self.headers,
-                           params={'nick': nickname, 'ai': int(ai)})
+        result = await get_json(url=f'{self.base_url}checkrp', headers=self.headers,
+                                params={'nick': nickname, 'ai': int(ai)})
 
         if not result.success:
             raise Exception(result.error)
@@ -112,8 +113,8 @@ class VprikolAPI:
     async def generate_rp_nickname(self, gender: Literal['male', 'female'], nation: Literal[
         'russian', 'american', 'german', 'french', 'italian', 'japanese', 'latinos', 'swedish', 'danish', 'romanian']) \
             -> GenerateRPUsernameAPIResponse:
-        result = await get(url=f'{self.base_url}rpnick', headers=self.headers,
-                           params={'gender': gender, 'nation': nation})
+        result = await get_json(url=f'{self.base_url}rpnick', headers=self.headers,
+                                params={'gender': gender, 'nation': nation})
         if not result.success:
             raise Exception(result.error)
 
@@ -121,11 +122,26 @@ class VprikolAPI:
 
     async def get_player_online(self, nickname: str, server_id: int, count: int = 100,
                                 offset: int = 0, date: int = int(time.time())) -> PlayerOnlineAPIResponse:
-        result = await get(url=f'{self.base_url}online', headers=self.headers,
-                           params={'nickname': nickname, 'count': count, 'offset': offset, 'server_id': server_id,
-                                   'filter_by_date': date})
+        result = await get_json(url=f'{self.base_url}online', headers=self.headers,
+                                params={'nickname': nickname, 'count': count, 'offset': offset, 'server_id': server_id,
+                                        'filter_by_date': date})
 
         if not result.success:
             raise Exception(result.error)
 
         return PlayerOnlineAPIResponse(**result.data)
+
+    async def get_ghetto_map(self, server_id: int) -> bytes:
+        result = await get_bytes(url=f'{self.base_url}ghetto/map', headers=self.headers,
+                                 params={'server_id': server_id})
+        if not result.success:
+            raise Exception(result.error)
+        return result.data
+
+    async def get_ghetto_zones(self, server_id: int) -> GhettoZonesAPIResponse:
+        result = await get_json(url=f'{self.base_url}ghetto/zones', headers=self.headers,
+                                params={'server_id': server_id})
+
+        if not result.success:
+            raise Exception(result.error)
+        return GhettoZonesAPIResponse(**result.data)

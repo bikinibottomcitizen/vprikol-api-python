@@ -137,6 +137,21 @@ class CheckRPUsernameAPIResponse(BaseModel):
     nickname: str = Field(alias='nick')
 
 
+class GhettoZonesData(BaseModel):
+    grove: int = Field(alias='2569507584')
+    ballas: int = Field(alias='2580283596')
+    vagos: int = Field(alias='2568805329')
+    rifa: int = Field(alias='2583651942')
+    aztec: int = Field(alias='2581790464')
+    nw: int = Field(alias='2155378856')
+
+
+class GhettoZonesAPIResponse(BaseModel):
+    data: GhettoZonesData
+    server_name: str = Field(alias='serverName')
+    updated_at: int = Field(alias='updatedAt')
+
+
 class GenerateRPUsernameAPIResponse(BaseModel):
     name: str
     surname: str

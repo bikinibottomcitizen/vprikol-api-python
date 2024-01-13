@@ -68,6 +68,9 @@ class VprikolAPI:
             if result.error and result.error.error_code == 422:
                 return PlayerInfoNotFound(**result.error.dict())
 
+            if result.error and result.error.error_code in [500, 502, 503]:
+                raise Exception(result.error.detail)
+
             try:
                 return PlayerInfoAPIResponse(**result.data)
             except ValidationError:

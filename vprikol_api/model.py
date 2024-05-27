@@ -1,7 +1,6 @@
-from typing import TypeVar
+from typing import TypeVar, List, Optional
 
 from pydantic import BaseModel, Field
-from pydantic.generics import GenericModel
 
 DataT = TypeVar('DataT')
 
@@ -22,9 +21,9 @@ class APIErrorResponse(BaseModel):
     queue_position: int | None = None
 
 
-class Response(GenericModel):
+class Response(BaseModel):
     data: DataT | None
-    error: APIErrorResponse | FastApiErrorResponse | None
+    error: APIErrorResponse | FastApiErrorResponse | None = None
     success: bool = True
 
 
@@ -150,6 +149,34 @@ class GhettoZonesAPIResponse(BaseModel):
     data: GhettoZonesData
     server_name: str = Field(alias='serverName')
     updated_at: int = Field(alias='updatedAt')
+
+
+class AuctionInfo(BaseModel):
+    active: bool
+    minimal_bet: int = Field("minimalBet")
+    time_end: int = Field(alias='timeEnd')
+    start_price: int = Field(alias='startPrice')
+
+
+class Coordinates(BaseModel):
+    x: float
+    y: float
+
+
+class EstateItem(BaseModel):
+    id: int
+    name: Optional[str]
+    owner: Optional[str]
+    auction: AuctionInfo
+    coordinates: Coordinates
+
+
+class PlayerEstateAPIResponse(BaseModel):
+    server_id: int = Field(alias='serverId')
+    server_label: str = Field(alias='serverLabel')
+    nickname: str = Field(alias='nickname')
+    houses: List[EstateItem]
+    businesses: List[EstateItem]
 
 
 class GenerateRPUsernameAPIResponse(BaseModel):

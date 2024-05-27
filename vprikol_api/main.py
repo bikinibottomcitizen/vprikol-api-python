@@ -1,13 +1,13 @@
+import asyncio
 import time
+from typing import Literal
 
-from .model import IpAPIResponse, MembersAPIResponse, PlayerInfoAPIResponse, CreatedFindTaskAPIResponse, \
-    ServerStatusAPIResponse, RatingAPIResponse, CheckRPUsernameAPIResponse, GenerateRPUsernameAPIResponse, \
-    PlayerInfoNotFound, PlayerOnlineAPIResponse, GhettoZonesAPIResponse
+from pydantic import parse_obj_as, ValidationError
 
 from .api import get_json, post_json, get_bytes
-from typing import Literal
-import asyncio
-from pydantic import parse_obj_as, ValidationError
+from .model import (IpAPIResponse, MembersAPIResponse, PlayerInfoAPIResponse, CreatedFindTaskAPIResponse,
+                    ServerStatusAPIResponse, RatingAPIResponse, CheckRPUsernameAPIResponse, GenerateRPUsernameAPIResponse,
+                    PlayerInfoNotFound, PlayerOnlineAPIResponse, GhettoZonesAPIResponse, PlayerEstateAPIResponse)
 
 
 class VprikolAPI:
@@ -78,10 +78,7 @@ class VprikolAPI:
 
     async def get_server_status(self, server_id: int | None = None) -> list[
                                                                            ServerStatusAPIResponse] | ServerStatusAPIResponse:
-        if server_id:
-            params = {'server': server_id}
-        else:
-            params = None
+        params = {'server': server_id} if server_id else None
 
         result = await get_json(url=f'{self.base_url}status', headers=self.headers,
                                 params=params)
@@ -148,3 +145,12 @@ class VprikolAPI:
         if not result.success:
             raise Exception(result.error)
         return GhettoZonesAPIResponse(**result.data)
+
+    async def get_estate(self, nickname: str, server_id: int) -> PlayerEstateAPIResponse:
+        result = await get_json(url=f'{self.base_url}estate', headers=self.headers,
+                                params={'server_id': server_id, 'nickname': nickname})
+
+        if not result.success:
+            raise Exception(result.error)
+
+        return PlayerEstateAPIResponse(**result.data)

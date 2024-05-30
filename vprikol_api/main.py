@@ -1,13 +1,13 @@
 import asyncio
 import time
-from typing import Literal
+from typing import List, Literal, Optional, Union
 
 from pydantic import parse_obj_as, ValidationError
 
 from .api import get_json, post_json, get_bytes
 from .model import (IpAPIResponse, MembersAPIResponse, PlayerInfoAPIResponse, CreatedFindTaskAPIResponse,
                     ServerStatusAPIResponse, RatingAPIResponse, CheckRPUsernameAPIResponse, GenerateRPUsernameAPIResponse,
-                    PlayerInfoNotFound, PlayerOnlineAPIResponse, GhettoZonesAPIResponse, PlayerEstateAPIResponse)
+                    PlayerInfoNotFound, PlayerOnlineAPIResponse, GhettoZonesAPIResponse, PlayerEstateAPIResponse, PlayersAPIResponse)
 
 
 class VprikolAPI:
@@ -46,7 +46,8 @@ class VprikolAPI:
                                 'ping': result.data[fraction_id]['players'][player]['ping'],
                                 'color': result.data[fraction_id]['players'][player]['color']})
             result.data[fraction_id]['players'] = players
-            response[fraction_id] = MembersAPIResponse(**result.data[fraction_id])
+            response[fraction_id] = MembersAPIResponse(
+                **result.data[fraction_id])
 
         return response
 
@@ -154,3 +155,13 @@ class VprikolAPI:
             raise Exception(result.error)
 
         return PlayerEstateAPIResponse(**result.data)
+
+    async def get_players(self, server_id: int,
+                          nicknames: Optional[List[Union[str, int]]] = None) -> PlayersAPIResponse:
+        result = await get_json(url=f'{self.base_url}players?nicknames={nicknames}', headers=self.headers,
+                                params={'server_id': server_id})
+
+        if not result.success:
+            raise Exception(result.error)
+
+        return PlayersAPIResponse(**result.data)

@@ -12,7 +12,7 @@ class FastAPIErrorDetail(BaseModel):
 
 
 class FastApiErrorResponse(BaseModel):
-    detail: Union[FastAPIErrorDetail, str]
+    detail: Union[list[FastAPIErrorDetail], str]
 
 
 class APIErrorResponse(BaseModel):

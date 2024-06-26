@@ -1,14 +1,18 @@
 [tool.poetry]
 name = "vprikol-api-python"
-version = "1.10.1"
+version = "1.13"
 description = ""
 authors = ["Alex <alexank1111@gmail.com>"]
+keywords = ["Vprikol", "API", "Python", "client"]
 readme = "README.md"
-packages = [{include = "vprikol_api"}]
+packages = [{ include = "vprikol_api" }]
+homepage = "https://github.com/bikinibottomcitizen/vprikol-api-python"
+repository = "https://github.com/bikinibottomcitizen/vprikol-api-python"
+documentation = "https://docs.szx.su"
 
 [tool.poetry.dependencies]
-python = "^3.10"
-pydantic = "^1.10.7"
+python = "^3.8"
+pydantic = ">=1.10.7,<3"
 aiohttp = "^3.8.4"
 
 

@@ -12,3 +12,5 @@ aiohttp = "^3.8.4"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+[project]
+readme = "README.md"

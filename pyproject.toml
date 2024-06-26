@@ -4,7 +4,6 @@ version = "1.13"
 description = "Библиотека для работы с API веселого прикола"
 authors = ["Alex <alexank1111@gmail.com>"]
 keywords = ["Vprikol", "API", "Python", "client"]
-readme = "README.md"
 packages = [{ include = "vprikol_api" }]
 homepage = "https://github.com/bikinibottomcitizen/vprikol-api-python"
 repository = "https://github.com/bikinibottomcitizen/vprikol-api-python"

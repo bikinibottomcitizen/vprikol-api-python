@@ -14,8 +14,3 @@ documentation = "https://docs.szx.su"
 python = "^3.8"
 pydantic = ">=1.10.7,<3"
 aiohttp = "^3.8.4"
-
-
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"

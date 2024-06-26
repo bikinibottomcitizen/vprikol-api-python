@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "vprikol-api-python"
 version = "1.13"
-description = ""
+description = "Библиотека для работы с API веселого прикола"
 authors = ["Alex <alexank1111@gmail.com>"]
 keywords = ["Vprikol", "API", "Python", "client"]
 readme = "README.md"

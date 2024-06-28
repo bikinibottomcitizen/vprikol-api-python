@@ -1,3 +1,3 @@
-from vprikol_api.main import VprikolAPI
+from .main import VprikolAPI
 
 __all__ = VprikolAPI

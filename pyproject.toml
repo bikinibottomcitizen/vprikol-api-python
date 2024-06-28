@@ -4,11 +4,12 @@ version = "1.13"
 description = ""
 authors = ["Alex <alexank1111@gmail.com>"]
 keywords = ["Vprikol", "API", "Python", "client"]
+include = ["README.rst"]
 readme = "README.rst"
 packages = [{ include = "vprikol_api" }]
-homepage = "https://github.com/bikinibottomcitizen/vprikol-api-python"
+homepage = ""
 repository = "https://github.com/bikinibottomcitizen/vprikol-api-python"
-documentation = "https://docs.szx.su"
+documentation = ""
 
 [tool.poetry.dependencies]
 python = "^3.8"

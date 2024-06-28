@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "vprikol-api-python"
+packages = [{ include = "vprikol_api" }]
+version = "1.15"
+description = "pip install vprikol-api-python"
+authors = ["Alex <alexank1111@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+pydantic = ">=1.10.7"
+aiohttp = "^3.9.4"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

@@ -4,7 +4,7 @@ version = "1.13"
 description = ""
 authors = ["Alex <alexank1111@gmail.com>"]
 keywords = ["Vprikol", "API", "Python", "client"]
-readme = "README.md"
+readme = "README.rst"
 packages = [{ include = "vprikol_api" }]
 homepage = "https://github.com/bikinibottomcitizen/vprikol-api-python"
 repository = "https://github.com/bikinibottomcitizen/vprikol-api-python"

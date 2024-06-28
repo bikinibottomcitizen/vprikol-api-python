@@ -2,7 +2,7 @@ from typing import Optional, Dict
 
 import aiohttp
 
-from vprikol_api.model import Response
+from .model import Response
 
 
 async def get_json(url: str, params: Optional[Dict] = None, headers: Optional[Dict] = None) -> Response:

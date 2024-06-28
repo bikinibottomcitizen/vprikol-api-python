@@ -4,10 +4,10 @@ from typing import List, Literal, Optional, Union, Dict
 
 from pydantic import parse_obj_as, ValidationError
 
-from vprikol_api.api import get_json, post_json, get_bytes
-from vprikol_api.model import (IpAPIResponse, MembersAPIResponse, PlayerInfoAPIResponse, CreatedFindTaskAPIResponse,
-                               ServerStatusAPIResponse, RatingAPIResponse, CheckRPUsernameAPIResponse, GenerateRPUsernameAPIResponse,
-                               PlayerInfoNotFound, PlayerOnlineAPIResponse, GhettoZonesAPIResponse, PlayerEstateAPIResponse, PlayersAPIResponse)
+from .api import get_json, post_json, get_bytes
+from .model import (IpAPIResponse, MembersAPIResponse, PlayerInfoAPIResponse, CreatedFindTaskAPIResponse,
+                    ServerStatusAPIResponse, RatingAPIResponse, CheckRPUsernameAPIResponse, GenerateRPUsernameAPIResponse,
+                    PlayerInfoNotFound, PlayerOnlineAPIResponse, GhettoZonesAPIResponse, PlayerEstateAPIResponse, PlayersAPIResponse)
 
 Gender = Literal['male', 'female']
 Nation = Literal['russian', 'american', 'german', 'french', 'italian', 'japanese', 'latinos', 'swedish', 'danish', 'romanian']
